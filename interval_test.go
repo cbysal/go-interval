@@ -42,15 +42,15 @@ func TestIntervalSetAdd(t *testing.T) {
 			set.Add(Interval[int]{begin, end})
 			output := make(map[int]struct{})
 			for _, interval := range set.Intervals() {
-				for j := interval.begin; j < interval.end; j++ {
+				for j := interval.Begin; j < interval.End; j++ {
 					output[j] = struct{}{}
 				}
 			}
 			if !slices.IsSortedFunc(set.Intervals(), func(a, b Interval[int]) int {
-				if a.begin >= a.end || b.begin >= b.end {
+				if a.Begin >= a.End || b.Begin >= b.End {
 					return -1
 				}
-				if a.begin <= b.end {
+				if a.Begin <= b.End {
 					return -1
 				}
 				return 1
@@ -59,7 +59,7 @@ func TestIntervalSetAdd(t *testing.T) {
 			}
 			expect := make(map[int]struct{})
 			for _, interval := range standard {
-				for j := interval.begin; j < interval.end; j++ {
+				for j := interval.Begin; j < interval.End; j++ {
 					expect[j] = struct{}{}
 				}
 			}
@@ -83,15 +83,15 @@ func TestIntervalSetRemove(t *testing.T) {
 			set.Remove(Interval[int]{begin, end})
 			output := make(map[int]struct{})
 			for _, interval := range set.Intervals() {
-				for j := interval.begin; j < interval.end; j++ {
+				for j := interval.Begin; j < interval.End; j++ {
 					output[j] = struct{}{}
 				}
 			}
 			if !slices.IsSortedFunc(set.Intervals(), func(a, b Interval[int]) int {
-				if a.begin >= a.end || b.begin >= b.end {
+				if a.Begin >= a.End || b.Begin >= b.End {
 					return -1
 				}
-				if a.begin <= b.end {
+				if a.Begin <= b.End {
 					return -1
 				}
 				return 1
@@ -100,7 +100,7 @@ func TestIntervalSetRemove(t *testing.T) {
 			}
 			expect := make(map[int]struct{})
 			for _, interval := range standard {
-				for j := interval.begin; j < interval.end; j++ {
+				for j := interval.Begin; j < interval.End; j++ {
 					expect[j] = struct{}{}
 				}
 			}
@@ -121,7 +121,7 @@ func TestIntervalSetContainsAll(t *testing.T) {
 	}
 	values := make(map[int]struct{})
 	for _, interval := range set.Intervals() {
-		for j := interval.begin; j < interval.end; j++ {
+		for j := interval.Begin; j < interval.End; j++ {
 			values[j] = struct{}{}
 		}
 	}
@@ -149,7 +149,7 @@ func TestIntervalSetContainsAny(t *testing.T) {
 	}
 	values := make(map[int]struct{})
 	for _, interval := range set.Intervals() {
-		for j := interval.begin; j < interval.end; j++ {
+		for j := interval.Begin; j < interval.End; j++ {
 			values[j] = struct{}{}
 		}
 	}

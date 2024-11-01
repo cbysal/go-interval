@@ -7,11 +7,11 @@ import (
 )
 
 type Interval[T cmp.Ordered] struct {
-	begin, end T
+	Begin, End T
 }
 
 func (interval Interval[T]) String() string {
-	return fmt.Sprintf("[%v %v]", interval.begin, interval.end)
+	return fmt.Sprintf("[%v %v]", interval.Begin, interval.End)
 }
 
 type IntervalSet[T cmp.Ordered] struct {
@@ -25,51 +25,51 @@ func NewIntervalSet[T cmp.Ordered]() *IntervalSet[T] {
 }
 
 func (set *IntervalSet[T]) Add(interval Interval[T]) {
-	if interval.begin >= interval.end {
+	if interval.Begin >= interval.End {
 		return
 	}
-	left, _ := slices.BinarySearch(set.intervals, interval.begin)
-	right, ok := slices.BinarySearch(set.intervals, interval.end)
+	left, _ := slices.BinarySearch(set.intervals, interval.Begin)
+	right, ok := slices.BinarySearch(set.intervals, interval.End)
 	if ok {
 		right++
 	}
 	set.intervals = slices.Delete(set.intervals, left, right)
 	switch {
 	case left%2 == 0 && right%2 == 0:
-		set.intervals = slices.Insert(set.intervals, left, interval.begin, interval.end)
+		set.intervals = slices.Insert(set.intervals, left, interval.Begin, interval.End)
 	case left%2 == 0:
-		set.intervals = slices.Insert(set.intervals, left, interval.begin)
+		set.intervals = slices.Insert(set.intervals, left, interval.Begin)
 	case right%2 == 0:
-		set.intervals = slices.Insert(set.intervals, left, interval.end)
+		set.intervals = slices.Insert(set.intervals, left, interval.End)
 	}
 }
 
 func (set *IntervalSet[T]) Remove(interval Interval[T]) {
-	if interval.begin >= interval.end {
+	if interval.Begin >= interval.End {
 		return
 	}
-	left, _ := slices.BinarySearch(set.intervals, interval.begin)
-	right, ok := slices.BinarySearch(set.intervals, interval.end)
+	left, _ := slices.BinarySearch(set.intervals, interval.Begin)
+	right, ok := slices.BinarySearch(set.intervals, interval.End)
 	if ok {
 		right++
 	}
 	set.intervals = slices.Delete(set.intervals, left, right)
 	switch {
 	case left%2 != 0 && right%2 != 0:
-		set.intervals = slices.Insert(set.intervals, left, interval.begin, interval.end)
+		set.intervals = slices.Insert(set.intervals, left, interval.Begin, interval.End)
 	case left%2 != 0:
-		set.intervals = slices.Insert(set.intervals, left, interval.begin)
+		set.intervals = slices.Insert(set.intervals, left, interval.Begin)
 	case right%2 != 0:
-		set.intervals = slices.Insert(set.intervals, left, interval.end)
+		set.intervals = slices.Insert(set.intervals, left, interval.End)
 	}
 }
 
 func (set *IntervalSet[T]) ContainsAll(interval Interval[T]) bool {
-	if interval.begin >= interval.end {
+	if interval.Begin >= interval.End {
 		return true
 	}
-	left, ok := slices.BinarySearch(set.intervals, interval.begin)
-	right, _ := slices.BinarySearch(set.intervals, interval.end)
+	left, ok := slices.BinarySearch(set.intervals, interval.Begin)
+	right, _ := slices.BinarySearch(set.intervals, interval.End)
 	if ok {
 		left++
 	}
@@ -77,11 +77,11 @@ func (set *IntervalSet[T]) ContainsAll(interval Interval[T]) bool {
 }
 
 func (set *IntervalSet[T]) ContainsAny(interval Interval[T]) bool {
-	if interval.begin >= interval.end {
+	if interval.Begin >= interval.End {
 		return false
 	}
-	left, ok := slices.BinarySearch(set.intervals, interval.begin)
-	right, _ := slices.BinarySearch(set.intervals, interval.end)
+	left, ok := slices.BinarySearch(set.intervals, interval.Begin)
+	right, _ := slices.BinarySearch(set.intervals, interval.End)
 	if ok {
 		left++
 	}
