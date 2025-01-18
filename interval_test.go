@@ -32,6 +32,7 @@ func TestIntervalString(t *testing.T) {
 		t.Fatalf("expect %v, got %v", expect, output)
 	}
 }
+
 func TestIntervalSetAdd(t *testing.T) {
 	for begin := -10; begin <= 80; begin++ {
 		for end := -10; end <= 80; end++ {
