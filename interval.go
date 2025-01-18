@@ -24,64 +24,64 @@ func NewIntervalSet[T cmp.Ordered]() *IntervalSet[T] {
 	}
 }
 
-func (set *IntervalSet[T]) Add(interval Interval[T]) {
-	if interval.Begin >= interval.End {
+func (set *IntervalSet[T]) Add(other Interval[T]) {
+	if other.Begin >= other.End {
 		return
 	}
-	left, _ := slices.BinarySearch(set.intervals, interval.Begin)
-	right, ok := slices.BinarySearch(set.intervals, interval.End)
+	left, _ := slices.BinarySearch(set.intervals, other.Begin)
+	right, ok := slices.BinarySearch(set.intervals, other.End)
 	if ok {
 		right++
 	}
 	set.intervals = slices.Delete(set.intervals, left, right)
 	switch {
 	case left%2 == 0 && right%2 == 0:
-		set.intervals = slices.Insert(set.intervals, left, interval.Begin, interval.End)
+		set.intervals = slices.Insert(set.intervals, left, other.Begin, other.End)
 	case left%2 == 0:
-		set.intervals = slices.Insert(set.intervals, left, interval.Begin)
+		set.intervals = slices.Insert(set.intervals, left, other.Begin)
 	case right%2 == 0:
-		set.intervals = slices.Insert(set.intervals, left, interval.End)
+		set.intervals = slices.Insert(set.intervals, left, other.End)
 	}
 }
 
-func (set *IntervalSet[T]) Remove(interval Interval[T]) {
-	if interval.Begin >= interval.End {
+func (set *IntervalSet[T]) Remove(other Interval[T]) {
+	if other.Begin >= other.End {
 		return
 	}
-	left, _ := slices.BinarySearch(set.intervals, interval.Begin)
-	right, ok := slices.BinarySearch(set.intervals, interval.End)
+	left, _ := slices.BinarySearch(set.intervals, other.Begin)
+	right, ok := slices.BinarySearch(set.intervals, other.End)
 	if ok {
 		right++
 	}
 	set.intervals = slices.Delete(set.intervals, left, right)
 	switch {
 	case left%2 != 0 && right%2 != 0:
-		set.intervals = slices.Insert(set.intervals, left, interval.Begin, interval.End)
+		set.intervals = slices.Insert(set.intervals, left, other.Begin, other.End)
 	case left%2 != 0:
-		set.intervals = slices.Insert(set.intervals, left, interval.Begin)
+		set.intervals = slices.Insert(set.intervals, left, other.Begin)
 	case right%2 != 0:
-		set.intervals = slices.Insert(set.intervals, left, interval.End)
+		set.intervals = slices.Insert(set.intervals, left, other.End)
 	}
 }
 
-func (set *IntervalSet[T]) ContainsAll(interval Interval[T]) bool {
-	if interval.Begin >= interval.End {
+func (set *IntervalSet[T]) ContainsAll(other Interval[T]) bool {
+	if other.Begin >= other.End {
 		return true
 	}
-	left, ok := slices.BinarySearch(set.intervals, interval.Begin)
-	right, _ := slices.BinarySearch(set.intervals, interval.End)
+	left, ok := slices.BinarySearch(set.intervals, other.Begin)
+	right, _ := slices.BinarySearch(set.intervals, other.End)
 	if ok {
 		left++
 	}
 	return left == right && left%2 != 0
 }
 
-func (set *IntervalSet[T]) ContainsAny(interval Interval[T]) bool {
-	if interval.Begin >= interval.End {
+func (set *IntervalSet[T]) ContainsAny(other Interval[T]) bool {
+	if other.Begin >= other.End {
 		return false
 	}
-	left, ok := slices.BinarySearch(set.intervals, interval.Begin)
-	right, _ := slices.BinarySearch(set.intervals, interval.End)
+	left, ok := slices.BinarySearch(set.intervals, other.Begin)
+	right, _ := slices.BinarySearch(set.intervals, other.End)
 	if ok {
 		left++
 	}
