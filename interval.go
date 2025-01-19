@@ -64,6 +64,18 @@ func (set *IntervalSet[T]) Remove(other Interval[T]) {
 	}
 }
 
+func (set *IntervalSet[T]) Difference(other *IntervalSet[T]) *IntervalSet[T] {
+	result := NewIntervalSet[T]()
+	result.intervals = append(result.intervals, set.intervals...)
+
+	for i := 0; i < len(other.intervals); i += 2 {
+		interval := Interval[T]{Begin: other.intervals[i], End: other.intervals[i+1]}
+		result.Remove(interval)
+	}
+
+	return result
+}
+
 func (set *IntervalSet[T]) ContainsAll(other Interval[T]) bool {
 	if other.Begin >= other.End {
 		return true
