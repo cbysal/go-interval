@@ -64,9 +64,52 @@ func (set *IntervalSet[T]) Remove(other Interval[T]) {
 	}
 }
 
-func (set *IntervalSet[T]) Difference(other *IntervalSet[T]) *IntervalSet[T] {
+func (set *IntervalSet[T]) Clear() {
+	set.intervals = set.intervals[:0]
+}
+
+func (set *IntervalSet[T]) Clone() *IntervalSet[T] {
+	result := &IntervalSet[T]{
+		intervals: make([]T, len(set.intervals)),
+	}
+	copy(result.intervals, set.intervals)
+	return result
+}
+
+func (set *IntervalSet[T]) Union(other *IntervalSet[T]) *IntervalSet[T] {
+	result := set.Clone()
+
+	for i := 0; i < len(other.intervals); i += 2 {
+		interval := Interval[T]{Begin: other.intervals[i], End: other.intervals[i+1]}
+		result.Add(interval)
+	}
+
+	return result
+}
+
+func (set *IntervalSet[T]) Intersect(other *IntervalSet[T]) *IntervalSet[T] {
 	result := NewIntervalSet[T]()
-	result.intervals = append(result.intervals, set.intervals...)
+
+	i, j := 0, 0
+	for i < len(set.intervals) && j < len(other.intervals) {
+		start := max(set.intervals[i], other.intervals[j])
+		end := min(set.intervals[i+1], other.intervals[j+1])
+		if start < end {
+			result.Add(Interval[T]{Begin: start, End: end})
+		}
+
+		if set.intervals[i+1] < other.intervals[j+1] {
+			i += 2
+		} else {
+			j += 2
+		}
+	}
+
+	return result
+}
+
+func (set *IntervalSet[T]) Difference(other *IntervalSet[T]) *IntervalSet[T] {
+	result := set.Clone()
 
 	for i := 0; i < len(other.intervals); i += 2 {
 		interval := Interval[T]{Begin: other.intervals[i], End: other.intervals[i+1]}
@@ -98,6 +141,14 @@ func (set *IntervalSet[T]) ContainsAny(other Interval[T]) bool {
 		left++
 	}
 	return left < right || left%2 != 0
+}
+
+func (set *IntervalSet[T]) Equal(other *IntervalSet[T]) bool {
+	return slices.Compare(set.intervals, other.intervals) == 0
+}
+
+func (set *IntervalSet[T]) IsEmpty() bool {
+	return len(set.intervals) == 0
 }
 
 func (set *IntervalSet[T]) Intervals() []Interval[T] {
